@@ -1,0 +1,6 @@
+Controllers\RegisterController.class
+DAOs\AccountDAO.class
+Controllers\RoleController.class
+Controllers\LoginController.class
+Modals\accounts.class
+DBContext\DBContext.class
