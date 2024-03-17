@@ -35,6 +35,21 @@ public class accounts {
         this.roleID = roleID;
     }
 
+    public accounts(int accountID, String accountPassword) {
+        this.accountID = accountID;
+        this.accountPassword = accountPassword;
+    }
+    
+
+    public accounts(int accountID, String accountName, Date accountDateOfBirth, String Phone, String Address) {
+        this.accountID = accountID;
+        this.accountName = accountName;
+        this.accountDateOfBirth = accountDateOfBirth;
+        this.Phone = Phone;
+        this.Address = Address;
+    }
+    
+
     public accounts(String accountEmail, String accountPassword, String accountName, Date accountDateOfBirth, String Phone, String Address, int roleID) {
         this.accountEmail = accountEmail;
         this.accountPassword = accountPassword;

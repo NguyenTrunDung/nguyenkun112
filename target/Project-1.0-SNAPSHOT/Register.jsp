@@ -3,8 +3,9 @@
     Created on : Feb 22, 2024, 9:06:32 PM
     Author     : Acer
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,13 +17,15 @@
         <style>
 
             form{
-                margin-left: 550px;
-                margin-top: 100px;
+                /*margin-left: 550px;*/
+                /*margin-top: 100px;*/
+                margin: auto;
             }
             .submit_button{
-                margin-left: 230px;
-                width: 600px;
-                height: 40px;
+                /*margin-left: 230px;*/
+                /*width: 600px;*/
+                /*height: 40px;*/
+                width: 100%;
             }
 
 
@@ -75,13 +78,14 @@
                 <p id="addresserror"></p>
             </div>
             <div class="text-center m-2">
-                <a class="link-dark" id="LoginLink" href="#" onclick="checkReset()" style="text-decoration: underline" >Already have an account -
+                <a class="link-dark" id="LoginLink" href="/LoginController" onclick="checkReset()" style="text-decoration: underline" >Already have an account -
                     Login</a> <br>
             </div>
-            <p>${requestScope.error}</p>
+
+
             <div class="m-3">
                 <button type="submit" name="btnRegis" value="Register" onclick="checkRegis()"
-                        class="submit_button btn btn-dark fw-bold ">Submit</button>
+                        class="btn btn-dark fw-bold rounded-5">Register</button>
 
             </div>
         </form>
@@ -149,7 +153,18 @@
             }
 
 
-            
+            function checkEmailLogin() {
+                var email = document.getElementById('email').value;
+                if (!emailValidation1.test(email) && !emailValidation2.test(email) && email == "") {
+
+                    return false;
+                } else {
+//            document.getElementById('emailerror').innerHTML = "";
+                    return true;
+                }
+            }
+
+
             function checkEmailRegister() {
                 var email1 = document.getElementById('email1').value;
                 if (email1 == "") {
@@ -169,24 +184,7 @@
                 }
             }
 
-            function checkEmailEdit() {
-                var email = document.getElementById('emailedit').value;
-                if (email == "") {
-//        document.getElementById('emailerror1').innerHTML = "Email cannot be empty";
-//        document.getElementById('emailerror1').style.color = "red";
-                    return false;
 
-                } else {
-                    if (!emailValidation1.test(email) && !emailValidation2.test(email)) {
-//            document.getElementById('emailerror1').innerHTML = "Email is invalid";
-//            document.getElementById('emailerror1').style.color = "red";
-                        return false;
-                    } else {
-//            document.getElementById('emailerror1').innerHTML = "";
-                        return true;
-                    }
-                }
-            }
 
             function checkUsername() {
                 var name = document.getElementById('username').value.trim();
@@ -201,20 +199,8 @@
                 }
             }
 
-            function checkUsernameEdit() {
-                var name = document.getElementById('usernameedit').value.trim();
 
-                if (name == "") {
-//        document.getElementById('usernameerror').innerHTML = "Username cannot be empty";
-//        document.getElementById('usernameerror').style.color = "red";
-                    return false;
-                } else {
-//        document.getElementById('usernameerror').innerHTML = "";
-                    return true;
-                }
-            }
 
-            
 
             function checkPasswordRegister() {
                 var password = document.getElementById('password1').value;
@@ -257,19 +243,7 @@
                 }
             }
 
-            function checkBirthdayEdit() {
-                var birthday = document.getElementById('birthdayedit').value;
 
-                if (birthday === "") {
-//        document.getElementById('birtherror').innerHTML = "Birthday cannot be empty";
-//        document.getElementById('birtherror').style.color = "red";
-                    return false;
-
-                } else {
-//        document.getElementById('birtherror').innerHTML = "";
-                    return true;
-                }
-            }
 
             function checkPhone() {
                 var phone = document.getElementById('phone').value;
@@ -285,19 +259,7 @@
 
             }
 
-            function checkPhoneEdit() {
-                var phone = document.getElementById('phoneedit').value;
 
-                if (!numberValidation.test(phone)) {
-//        document.getElementById('phoneerror').innerHTML = "Phone is invalid";
-//        document.getElementById('phoneerror').style.color = "red";
-                    return false;
-                } else {
-//        document.getElementById('phoneerror').innerHTML = "";
-                    return true;
-                }
-
-            }
 
             function checkAddress() {
                 var address = document.getElementById('address').value;
@@ -312,22 +274,37 @@
                 }
             }
 
-            function checkAddressEdit() {
-                var address = document.getElementById('addressedit').value;
-                var address = address.replace(/\s/g, '');
-                if (address === "") {
-//        document.getElementById('addresserror').innerHTML = " You have to provide your address";
-//        document.getElementById('addresserror').style.color = "red";
-                    return false;
+
+
+            //validate login form
+            function checkLogin() {
+                let emailerror = document.getElementById('emailerror');
+                let passerror = document.getElementById('passerror');
+                let check = true;
+                if (checkEmailLogin() === false) {
+                    check = false;
+                    emailerror.innerHTML = "Email is invalid";
+                    emailerror.style.color = "red";
                 } else {
-//        document.getElementById('addresserror').innerHTML = "";
-                    return true;
+                    emailerror.innerHTML = "";
                 }
+
+                if (checkPasswordLogin() === false) {
+                    passerror.innerHTML = "Password must be between 6 and 20 characters";
+                    passerror.style.color = "red";
+                    check = false;
+                } else {
+                    passerror.innerHTML = "";
+                }
+                if (!check) {
+                    event.preventDefault();
+                } else {
+                    window.location.href = "Login";
+                }
+
             }
 
-
-
-//validate register form
+            //validate register form
             function checkRegis() {
                 let emailerror = document.getElementById('emailerror1');
                 let passerror = document.getElementById('passerror1');
@@ -336,6 +313,7 @@
                 let birtherror = document.getElementById('birtherror');
                 let phoneerror = document.getElementById('phoneerror');
                 let addresserror = document.getElementById('addresserror');
+
                 let check = true;
 
                 if (!checkEmailRegister()) {
@@ -391,66 +369,15 @@
                 }
 
                 if (!check) {
+
                     event.preventDefault();
+
                 } else {
-                    window.location.href = "Login";
+                    window.location.href = "/RoleController/Customer";
                 }
 
             }
 
-//validate edit form
-            function checkEdit() {
-                let emailerror = document.getElementById('emailediterror');
-                let nameerror = document.getElementById('usernameediterror');
-                let birtherror = document.getElementById('birthediterror');
-                let phoneerror = document.getElementById('phoneediterror');
-                let addresserror = document.getElementById('addressediterror');
-                let check = true;
-
-                if (!checkEmailEdit()) {
-                    check = false;
-                    emailerror.innerHTML = "Email is invalid";
-                    emailerror.style.color = "red";
-                } else {
-                    emailerror.innerHTML = "";
-                }
-
-                if (!checkUsernameEdit()) {
-                    check = false;
-                    nameerror.innerHTML = "Username cannot be empty";
-                    nameerror.style.color = "red";
-                } else {
-                    nameerror.innerHTML = "";
-                }
-
-                if (!checkBirthdayEdit()) {
-                    check = false;
-                    birtherror.innerHTML = "Birthday cannot be empty";
-                    birtherror.style.color = "red";
-                } else {
-                    birtherror.innerHTML = "";
-                }
-                if (!checkPhoneEdit()) {
-                    check = false;
-                    phoneerror.innerHTML = "Phone is invalid";
-                    phoneerror.style.color = "red";
-                } else {
-                    phoneerror.innerHTML = "";
-                }
-                if (!checkAddressEdit()) {
-                    check = false;
-                    addresserror.innerHTML = "You have to provide your address";
-                    addresserror.style.color = "red";
-                } else {
-                    addresserror.innerHTML = "";
-                }
-
-                if (!check) {
-                    event.preventDefault();
-                } else {
-                    window.location.href = "User";
-                }
-            }
 
             function checkoldpass() {
                 var oldpass1 = document.getElementById('oldpass').value;
@@ -487,8 +414,9 @@
 
 
         </script>
+
         <%
-            String alertMess = (String) request.getAttribute("alertMess");
+            String alertMess = (String) request.getAttribute("ErrorEmail");
             if (alertMess != null && !alertMess.isEmpty()) {
         %>
         <script>

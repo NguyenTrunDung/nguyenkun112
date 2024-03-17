@@ -11,23 +11,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AccountDAO {
-
     private Connection conn = null;
 
     public AccountDAO() {
+          conn = DBContext.getConnection();
     }
 
-    public accounts checkLogin(String username, String password) {
+    public accounts checkLogin(String accountEmail , String accountPassword ) {
         accounts acc = null;
-        DBContext cont = new DBContext();
-        conn = cont.getConnection();
+        //DBContext cont = new DBContext();
+        conn = DBContext.getConnection();
         String query = "SELECT * FROM [Spring-Store].[dbo].[Accounts] WHERE accountEmail=? AND accountPassword=?";
         try {
             PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, username);
-            st.setString(2, password);
+            st.setString(1, accountEmail);
+            st.setString(2, accountPassword);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 acc = new accounts(rs.getInt("accountID"), rs.getString("accountEmail"), rs.getString("accountPassword"),
@@ -40,12 +42,12 @@ public class AccountDAO {
         return acc;
     }
 
-    public accounts getAccount(String account_id) {
+    public accounts getAccount(int accountID) {
         accounts acc = null;
         String query = "SELECT * FROM [Spring-Store].[dbo].[Accounts] WHERE accountID=?";
         try {
             PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, account_id);
+            st.setInt(1, accountID);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 acc = new accounts(rs.getInt("accountID"), rs.getString("accountEmail"), rs.getString("accountPassword"),
@@ -57,16 +59,17 @@ public class AccountDAO {
     }
 
   public int insertAccount(accounts acc) {
+      String password = acc.getAccountPassword();
     String query = "INSERT INTO [Spring-Store].[dbo].[Accounts] "
             + "( [accountEmail], [accountPassword], [accountName], [accountDateOfBirth], [Phone], [Address], [roleID]) "
-            + "VALUES (?, ?, ?, ?, ?, ?, 3)";
+            + "VALUES (?, ?, ?, ?, ?, ?, 2)";
     int rowsAffected = 0;
 
     try (Connection conn = DBContext.getConnection(); // Khởi tạo kết nối
          PreparedStatement st = conn.prepareStatement(query)) {
 
         st.setString(1, acc.getAccountEmail());
-        st.setString(2, acc.getAccountPassword());
+        st.setString(2, getMd5(password));
         st.setString(3, acc.getAccountName());
         st.setDate(4, acc.getAccountDateOfBirth()); // Có thể thay đổi giá trị mặc định tùy theo yêu cầu
         st.setString(5, acc.getPhone());
@@ -89,6 +92,84 @@ public class AccountDAO {
             }
             return rs;
       }
+   
+    public accounts getAccounts(String id){
+        accounts acc = new accounts();
+      Connection conn2 = DBContext.getConnection();
+
+      //  conn = DBContext.getConnection();
+        String query = ("SELECT * FROM [Spring-Store].[dbo].[Accounts] WHERE accountID=?");
+        try {
+            PreparedStatement st = conn2.prepareStatement(query);
+            st.setString(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                 acc = new accounts(rs.getInt("accountID"), rs.getString("accountEmail"), rs.getString("accountPassword"),
+                        rs.getString("accountName"), rs.getDate("accountDateOfBirth"), rs.getString("Phone"), rs.getString("Address"), rs.getInt("roleID"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return acc;
+    }
+
+    public accounts checkRegisEmail(String email){
+        accounts accEmail = new accounts();
+        Connection conn2 = DBContext.getConnection();
+
+        //  conn = DBContext.getConnection();
+        String query = ("SELECT * FROM [Spring-Store].[dbo].[Accounts] WHERE accountEmail=?");
+        try {
+            PreparedStatement st = conn2.prepareStatement(query);
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                accEmail = new accounts(rs.getInt("accountID"), rs.getString("accountEmail"), rs.getString("accountPassword"),
+                        rs.getString("accountName"), rs.getDate("accountDateOfBirth"), rs.getString("Phone"), rs.getString("Address"), rs.getInt("roleID"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return accEmail;
+    }
+    
+    
+    
+     public int UpdatePassword(accounts ac) {
+        String password = ac.getAccountPassword();
+        String query = ("UPDATE [Spring-Store].[dbo].[Accounts] set accountPassword=? where accountID=?");
+        int ketqua = 0;
+        try {
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1,getMd5(password));
+            st.setInt(2, ac.getAccountID());
+            ketqua = st.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ketqua;
+    }
+
+    public int Update(accounts acc) {
+          Connection conn2 = DBContext.getConnection();
+        String query = ("UPDATE [Spring-Store].[dbo].[Accounts] set accountName=?, accountDateOfBirth=?, Phone=?, Address=? where accountID=?");
+        int ketqua = 0;
+        try {
+           PreparedStatement st = conn2.prepareStatement(query);
+             st.setString(1, acc.getAccountName());
+            st.setDate(2, acc.getAccountDateOfBirth());
+            st.setString(3, acc.getPhone());
+            st.setString(4, acc.getAddress());
+            st.setInt(5, acc.getAccountID());
+            ketqua = st.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ketqua;
+    }
+     
 
     public String getMd5(String input) {
         try {
@@ -113,6 +194,7 @@ public class AccountDAO {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+        
     }
-
+    
 }

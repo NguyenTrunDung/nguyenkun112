@@ -14,7 +14,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,7 +44,7 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");            
+            out.println("<title>Servlet LoginController</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
@@ -62,10 +65,40 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String path = request.getRequestURI();
-       if(path.endsWith("/LoginController")){
-           request.getRequestDispatcher("/Login.jsp").forward(request, response);
-       }
+        String path = request.getRequestURI();
+        boolean flag = false;
+        HttpSession session = request.getSession();
+
+        if (path.endsWith("/LoginController")) {
+
+            Cookie[] cookies = request.getCookies();
+
+            if (session.getAttribute("acc") == null || cookies == null) {
+
+                System.out.println("cookiees null" + flag);
+                System.out.println("session.getAttribute" + " " + session.getAttribute("acc"));
+                // response.sendRedirect("/LoginController");
+
+                request.getRequestDispatcher("/Login.jsp").forward(request, response);
+
+            } else {
+                if (cookies != null) {
+
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("user") && !cookie.getValue().equals("") || cookie.getName().equals("staff") && !cookie.getValue().equals("")) {
+                            request.setAttribute("id", cookie.getValue());
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (flag) {
+                    System.out.println("flag" + flag);
+                    response.sendRedirect("/");
+                }
+            }
+        }
     }
 
     /**
@@ -108,14 +141,37 @@ public class LoginController extends HttpServlet {
                     }
                 }
                 HttpSession session = request.getSession();
-                 if (acc.getRoleID() ==1) {
-                    session.setAttribute("login", "admin");
+                if (acc.getRoleID() == 1) {
+                    Cookie cAdmin = new Cookie("admin", String.valueOf(acc.getAccountID()));
+                    session.setAttribute("acc", acc);
+                    request.setAttribute("id", String.valueOf(acc.getAccountID()));
+
+                    Cookie cAdmin2 = new Cookie("admiName", URLEncoder.encode(acc.getAccountName(), "UTF-8"));
+                    cAdmin.setMaxAge(60 * 60);
+                    cAdmin2.setMaxAge(60 * 60);
+                    response.addCookie(cAdmin);
+                    response.addCookie(cAdmin2);
                     response.sendRedirect("/RoleController/Admin");
-                } else if (acc.getRoleID() ==3) {
-                    session.setAttribute("login", "customer");
-                    session.setAttribute("Cus_id", acc.getAccountID() + "");
+                } else if (acc.getRoleID() == 3) {
+                    Cookie cStaff = new Cookie("staff", String.valueOf(acc.getAccountID()));
+                    session.setAttribute("acc", acc);
+                    request.setAttribute("id", String.valueOf(acc.getAccountID()));
+
+                    Cookie cStaff2 = new Cookie("staffName", URLEncoder.encode(acc.getAccountName(), "UTF-8"));
+                    cStaff.setMaxAge(60 * 60);
+                    cStaff2.setMaxAge(60 * 60);
+                    response.addCookie(cStaff);
+                    response.addCookie(cStaff2);
                     response.sendRedirect("/RoleController/Staff");
-                }else{
+                } else {
+                    Cookie c = new Cookie("user", String.valueOf(acc.getAccountID()));
+                    session.setAttribute("acc", acc);
+              //      session.setAttribute("id", String.valueOf(acc.getAccountID()));
+                    Cookie cfull = new Cookie("userName", URLEncoder.encode(acc.getAccountName(), "UTF-8"));
+                    c.setMaxAge(60 * 60);
+                    cfull.setMaxAge(60 * 60);
+                    response.addCookie(c);
+                    response.addCookie(cfull);
                     response.sendRedirect("/RoleController/Customer");
                 }
             } else {

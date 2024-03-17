@@ -24,6 +24,9 @@
                         <li class="nav-item">
                             <a href="/RegisterController" ><button class="btn btn-group btn-light m-2">Register </button></a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/logout" ><button class="btn btn-group btn-light m-2">Logout </button></a>
+                        </li>
                     </ul>
                 </div>
             </div>

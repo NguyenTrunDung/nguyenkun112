@@ -6,12 +6,16 @@ package Controllers;
 
 import DAOs.AccountDAO;
 import Modals.accounts;
-import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+
+
 import java.sql.Date;
 
 /**
@@ -60,6 +64,8 @@ public class RegisterController extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         if (path.endsWith("/RegisterController")) {
+
+
             request.getRequestDispatcher("/Register.jsp").forward(request, response);
         }
     }
@@ -75,6 +81,7 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         if (request.getParameter("btnRegis") != null) {
             String email = request.getParameter("email");
             String name = request.getParameter("username");
@@ -84,14 +91,29 @@ public class RegisterController extends HttpServlet {
             String address = request.getParameter("address");
 
             AccountDAO aD = new AccountDAO();
-            accounts acc = new accounts(email, pass, name, birthday, phone, address, 2);
-            int addCount = aD.insertAccount(acc);
-            if (addCount != 0) {
-                response.sendRedirect("/RoleController/Customer");
-            } else {
-                response.sendRedirect("/RegisterController");
+
+
+            accounts accEmail = aD.checkRegisEmail(email);
+            if (accEmail.getAccountEmail() != null) {
+                request.setAttribute("ErrorEmail", "Email already exist");
+                System.out.println("123123");
+                request.getRequestDispatcher("Register.jsp").forward(request, response);
+               // response.sendRedirect("/RegisterController");
 
             }
+            else {
+             //   request.removeAttribute("ErrorEmail");
+
+                accounts acc = new accounts(email, pass, name, birthday, phone, address, 2);
+                int addCount = aD.insertAccount(acc);
+                if (addCount != 0) {
+                    response.sendRedirect("/RoleController/Customer");
+                } else {
+                    response.sendRedirect("/RegisterController");
+
+                }
+            }
+
         }
     }
 

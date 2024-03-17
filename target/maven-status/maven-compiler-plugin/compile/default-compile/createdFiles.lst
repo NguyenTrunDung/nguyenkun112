@@ -1,6 +1,8 @@
-Controllers\RegisterController.class
-DAOs\AccountDAO.class
+Controllers\LogoutController.class
 Controllers\RoleController.class
-Controllers\LoginController.class
 Modals\accounts.class
 DBContext\DBContext.class
+Controllers\CustomerController.class
+Controllers\RegisterController.class
+DAOs\AccountDAO.class
+Controllers\LoginController.class

@@ -11,12 +11,46 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Đăng nhập - Đăng ký</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="index.css>
+        <style>
+            .login_button{
+                width: 600px;
+                height: 50px;
+                justify-items: center;
+                text-align: center;
+            }
+            .footer-text{
+                font-size: 20px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            #Shoptext{
+                text-align: center;
+                color: white;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .Shoptext1{
+                font-size: 28px;
+                font-weight: bold
+            }
+            .Shoptext2{
+                font-size: 20px;
+                font-weight: bold
+            }
+            #linkfooter{
+                text-decoration: none;
+                color: white;
+            }
+            #BackToLogin{
+                text-decoration: none;
+                font-weight: bold
+            }
+        </style>
     </head>
 
     <body>
         <!--Navbar-->
-         <jsp:include page="Nav.jsp" />
+        <jsp:include page="Nav.jsp" />
 
 
 
@@ -113,39 +147,7 @@
                                     }
 
 
-                                    function checkEmailEdit() {
-                                        var email = document.getElementById('emailedit').value;
-                                        if (email == "") {
-//        document.getElementById('emailerror1').innerHTML = "Email cannot be empty";
-//        document.getElementById('emailerror1').style.color = "red";
-                                            return false;
 
-                                        } else {
-                                            if (!emailValidation1.test(email) && !emailValidation2.test(email)) {
-//            document.getElementById('emailerror1').innerHTML = "Email is invalid";
-//            document.getElementById('emailerror1').style.color = "red";
-                                                return false;
-                                            } else {
-//            document.getElementById('emailerror1').innerHTML = "";
-                                                return true;
-                                            }
-                                        }
-                                    }
-
-
-
-                                    function checkUsernameEdit() {
-                                        var name = document.getElementById('usernameedit').value.trim();
-
-                                        if (name == "") {
-//        document.getElementById('usernameerror').innerHTML = "Username cannot be empty";
-//        document.getElementById('usernameerror').style.color = "red";
-                                            return false;
-                                        } else {
-//        document.getElementById('usernameerror').innerHTML = "";
-                                            return true;
-                                        }
-                                    }
 
                                     function checkPasswordLogin() {
                                         var password = document.getElementById('password').value;
@@ -194,58 +196,7 @@
 
 
 //validate edit form
-                                    function checkEdit() {
-                                        let emailerror = document.getElementById('emailediterror');
-                                        let nameerror = document.getElementById('usernameediterror');
-                                        let birtherror = document.getElementById('birthediterror');
-                                        let phoneerror = document.getElementById('phoneediterror');
-                                        let addresserror = document.getElementById('addressediterror');
-                                        let check = true;
 
-                                        if (!checkEmailEdit()) {
-                                            check = false;
-                                            emailerror.innerHTML = "Email is invalid";
-                                            emailerror.style.color = "red";
-                                        } else {
-                                            emailerror.innerHTML = "";
-                                        }
-
-                                        if (!checkUsernameEdit()) {
-                                            check = false;
-                                            nameerror.innerHTML = "Username cannot be empty";
-                                            nameerror.style.color = "red";
-                                        } else {
-                                            nameerror.innerHTML = "";
-                                        }
-
-                                        if (!checkBirthdayEdit()) {
-                                            check = false;
-                                            birtherror.innerHTML = "Birthday cannot be empty";
-                                            birtherror.style.color = "red";
-                                        } else {
-                                            birtherror.innerHTML = "";
-                                        }
-                                        if (!checkPhoneEdit()) {
-                                            check = false;
-                                            phoneerror.innerHTML = "Phone is invalid";
-                                            phoneerror.style.color = "red";
-                                        } else {
-                                            phoneerror.innerHTML = "";
-                                        }
-                                        if (!checkAddressEdit()) {
-                                            check = false;
-                                            addresserror.innerHTML = "You have to provide your address";
-                                            addresserror.style.color = "red";
-                                        } else {
-                                            addresserror.innerHTML = "";
-                                        }
-
-                                        if (!check) {
-                                            event.preventDefault();
-                                        } else {
-                                            window.location.href = "User";
-                                        }
-                                    }
 
                                     function checkoldpass() {
                                         var oldpass1 = document.getElementById('oldpass').value;
@@ -283,7 +234,7 @@
 
         </script>
         <%
-            String alertMess = (String) request.getAttribute("alertMess");
+            String alertMess = (String) request.getAttribute("alertChangePassSuccess");
             if (alertMess != null && !alertMess.isEmpty()) {
         %>
         <script>

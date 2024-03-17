@@ -3,13 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package Controllers;
+import jakarta.servlet.ServletException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -57,17 +60,15 @@ public class RoleController extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getRequestURI();
         if (path.endsWith("/RoleController/Customer")) {
-            request.getRequestDispatcher("/Login.jsp").forward(request, response);
-        } else {
-            if (path.endsWith("/RoleController/Staff")) {
-                request.getRequestDispatcher("/staffdashboard.jsp").forward(request, response);
-            } else {
-                if (path.endsWith("/RoleController/Admin")) {
+            request.getRequestDispatcher("/Home.jsp").forward(request, response);
+        } else if  (path.endsWith("/RoleController/Staff"))  {
+                request.getRequestDispatcher("/Home.jsp").forward(request, response);
+            } else if (path.endsWith("/RoleController/Admin")){
                     request.getRequestDispatcher("/admindashboard.jsp").forward(request, response);
                 }
-            }
-        }
-    }
+             }
+        
+    
 
     /**
      * Handles the HTTP <code>POST</code> method.

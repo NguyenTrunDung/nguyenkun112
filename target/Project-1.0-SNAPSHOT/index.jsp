@@ -14,6 +14,11 @@
     <body>
         <h1>Hello World!</h1>
         .
+        <% if (session.getAttribute("acc") != null) { %>
+        <a href="/logout" ><button class="btn btn-group btn-light m-2">Logout </button></a>
+
+        <% } else { %>
         <a href="/LoginController">Login</a>
+        <% }%>
     </body>
 </html>
